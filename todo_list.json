@@ -1,7 +1,0 @@
-todo_list.json = {
-    list: [{
-        contetns: '할 일',
-        complete: true/false
-    }
-    ]
-}
