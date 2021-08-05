@@ -21,6 +21,8 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+// use ejs package for view engine
+app.set('view engine', 'ejs');
 
 /*
 * app.use(); // middle-ware 연결
@@ -29,13 +31,15 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+/* use installed modules */
+app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 /* link To-Do related middle-ware */
-//app.use('/', listRouter);
 app.get('/list', listRouter.list);
 app.post('/add', listRouter.add);
 app.post('/complete', listRouter.complete);
@@ -53,7 +57,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error.jade');
 });
 
 //app 객체를 모듈로
