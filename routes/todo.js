@@ -20,7 +20,6 @@ exports.list = function(req,res) {
             'list': []            
         }; 
         fs.writeFile('./todo_list.json', JSON.stringify(list), function(error) {
-
             res.json(list);
         });
     }
@@ -53,7 +52,6 @@ exports.complete = function(req, res) {
     function(err, data) {
         data = JSON.parse(data);
         data.list[req.body.index].complete = true;
-
         fs.writeFile('./todo_list.json', JSON.stringify(data), function(err)
         {
             res.json(true);
@@ -75,4 +73,18 @@ exports.delete = function(req, res) {
         });
     });
 }
+
+exports.edit = function(req,res) {
+    fs.readFile('./todo_list.json', {'encoding' : 'utf-8'},
+    function(err, data) {
+        data = JSON.parse(data);
+        console.log('data: '+data.list[req.body.idx].contents)
+        data.list[req.body.idx].contents = req.body.updated_todo
+        console.log('data: '+data.list[req.body.idx].contents)
+
+        fs.writeFile('./todo_list.json', JSON.stringify(data), function(err){
+            res.json(true);
+        })
+    })
+};
 //module.exports = router;

@@ -44,6 +44,7 @@ app.get('/list', listRouter.list);
 app.post('/add', listRouter.add);
 app.post('/complete', listRouter.complete);
 app.post('/del', listRouter.delete);
+app.post('/edit', listRouter.edit);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -1,7 +1,8 @@
 /*tslint:disabled*/
 
+let working = false
 $(function() {
-    var get_list = function() {
+    let get_list = function() {
         $.ajax('/list', {
             'success': function(list) {
                 var trs = '';
@@ -14,9 +15,10 @@ $(function() {
                 for (var i = 0, len = list.length; i < len; i++) {
                     trs += '<tr>' + 
                     '<td>' + (i+1) + '</td>' +
-                    '<td>'+ list[i].contents +'</td>' +
-                    '<td><button type = "button" class="btn btn-success">완료</button></td>' +
-                    '<td><button type = "button" class="btn btn-danger">삭제</button></td>' +
+                    '<td> <input type="text" value="'+list[i].contents+'" disabled id="content_'+i+'"></td>' +
+                    '<td><button type = "button" id="edit" class="btn btn-success">수정</button></td>' +
+                    '<td><button type = "button" id="success" class="btn btn-success">완료</button></td>' +
+                    '<td><button type = "button" id="delete" class="btn btn-danger">삭제</button></td>' +
                     '</tr>';
                 }
 
@@ -38,7 +40,7 @@ $(function() {
         });
     });
 
-    $('tbody').on('click', '.btn-success', function(){
+    $('tbody').on('click', '#success', function() {
         $.ajax('/complete', {
             'method': 'POST',
             'dataType' : 'json',
@@ -49,7 +51,7 @@ $(function() {
             'success': get_list
         })
     });
-	$('tbody').on('click', '.btn-danger', function () {
+	$('tbody').on('click', '#delete', function () {
 		$.ajax('/del', {
 			'method': 'POST',
 			'data': {
@@ -58,4 +60,31 @@ $(function() {
 			'success': get_list
 		});
 	});
+    $('tbody').on('click', '#edit', function() {
+        let index = $(this).parent().siblings(':first').text()-1
+        if (working == true) {
+            if ($('#content_'+index+'').prop('disabled')) {
+                alert('다른 todo 수정을 완료해주세요.')
+            }
+            else {
+                //console.log($('#content_'+index+'').val())
+                $.ajax('/edit', {
+                    'method': 'POST',
+                    'data': {
+                        'idx': index,
+                        'updated_todo': $('#content_'+index+'').val()
+                    },
+                    'success': get_list,
+                    'error': function(error) {
+                        alert(eval(error))
+                    }
+                })
+            }
+            working = false
+        }
+        else {
+            $('#content_'+index+'').removeAttr('disabled')
+            working = true
+        }
+    });
 });
