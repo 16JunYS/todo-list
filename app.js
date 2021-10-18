@@ -15,6 +15,8 @@ ToDo List
   4. Delete
   */
 var listRouter = require('./routes/todo');
+let playground = require('./routes/playground');
+
 // express 패키지 호출출하여 app 변수 객체 생성
 var app = express();
 
@@ -45,6 +47,10 @@ app.post('/add', listRouter.add);
 app.post('/complete', listRouter.complete);
 app.post('/del', listRouter.delete);
 app.post('/edit', listRouter.edit);
+
+/* link JAVASCRIPT playground */
+app.use('/playground', playground);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
